@@ -1,13 +1,3 @@
-// vim: sw=4 et
-// All Records example of 'foo_sth'
-// _rts:foo_sth:5m:12345 sum 100
-// _rts:foo_sth:5m:12345 count 100
-// _rts:foo_sth:5m:12345 avg 100
-// _rts:foo_sth:5m:12345 min 100
-// _rts:foo_sth:5m:12345 max 100
-// _rts:foo_sth:aggr.h:23 sum 100
-// _rts:foo_sth:aggr.d:6 avg 100
-
 let CHANNEL = '_rts_.record'
 let util = require('./util/util')
 let fs = require('fs')

@@ -1,0 +1,36 @@
+{
+  "name": "skyrts",
+  "version": "0.1.0",
+  "description": "redis统计系统",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test",
+    "cz": "conventional-changelog -p atom -i CHANGELOG.md -s -r 0 && git add . && git status && git cz",
+    "push": "npm version patch && npm publish . && git push"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kongnet/skyrts.git"
+  },
+  "keywords": [
+    "stat",
+    "real",
+    "time",
+    "redis"
+  ],
+  "author": "9601698@qq.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kongnet/skyrts/issues"
+  },
+  "homepage": "https://github.com/kongnet/skyrts#readme",
+  "devDependencies": {
+    "conventional-changelog": "^3.1.10",
+    "cz-jt": "^0.1.11"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-jt"
+    }
+  }
+}

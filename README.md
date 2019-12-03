@@ -16,3 +16,6 @@ const Pack = require('./package.json')
     prefix: Pack.name // 需要一个前缀，区分多项目
   })
 ```
+
+* 如果需要 按季度记录，gran中增加3M
+* 如果要经常统计全局总值，gran中增加9999y 9999年 

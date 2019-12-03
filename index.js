@@ -8,7 +8,7 @@ let redis = {};
   scripts[key] = fs.readFileSync(__dirname + '/lua/' + key + '.lua', 'utf-8')
 })
 
-function loadScripts (client) {
+function loadScripts(client) {
   for (let scriptName in scripts) {
     (function (scriptName) {
       client.script('load', scripts[scriptName], function (err, sha1) {
@@ -18,7 +18,7 @@ function loadScripts (client) {
   }
 }
 
-function evalScript (client, scriptName, keys, args, callback) {
+function evalScript(client, scriptName, keys, args, callback) {
   // console.log(`---------client.script('EXISTS', scriptName)------------${client.script('EXISTS', scriptName)}`)
   if (scriptSha1s[scriptName]) {
     args = [scriptSha1s[scriptName], keys.length].concat(keys || []).concat(args || [])
@@ -40,7 +40,7 @@ let aggrvals = {
   d: [0, 1, 2, 3, 4, 5, 6]
 }
 
-function log (err, results) {
+function log(err, results) {
   if (err) console.log(err.stack || err)
 }
 
@@ -55,7 +55,7 @@ function log (err, results) {
  *          prefix: a prefix for all keys
  *
  */
-exports = module.exports = function rts (options) {
+exports = module.exports = function rts(options) {
   let redis = options.redis
   let redisAsync = options.redisAsync
   let granularities = options.gran || '5m, 1h, 1d, 1w'
@@ -78,23 +78,23 @@ exports = module.exports = function rts (options) {
     granMap[granInfo[1]] = granInfo
   })
 
-  function getGranKey (name, gran, timestamp) {
+  function getGranKey(name, gran, timestamp) {
     let granId = util.getGranId(gran, timestamp)
     return [prefix, name, gran[1], granId].join(':')
   }
 
-  function getAggrGruopKey (name, aggr, timestamp) {
+  function getAggrGruopKey(name, aggr, timestamp) {
     let gid = util.getAggrGroupId(aggr, timestamp)
     return [prefix, name, 'aggr', gid].join(':')
   }
 
-  function getAggrKey (name, aggr, timestamp) {
+  function getAggrKey(name, aggr, timestamp) {
     let aggrId = util.getAggrId(aggr, timestamp)
     return getAggrGruopKey(name, aggr, timestamp) + '.' + aggrId
   }
 
   // some thing's some statics value in some granularity at some time
-  function setValue (name, stat, value, gran, timestamp, callback) {
+  function setValue(name, stat, value, gran, timestamp, callback) {
     if (typeof gran === 'string') {
       gran = util.getUnitDesc(gran)
     }
@@ -108,9 +108,16 @@ exports = module.exports = function rts (options) {
      * @param aggregations {Array} dy (day in week each year), hm(hour of day each month).
      *
      */
-  function record (name, num, statistics, aggregations, timestamp, callback) {
+  function record(name, num = 1, statistics = ['sum', 'avg'], aggregations, timestamp, callback) {
+    if (statistics.includes('count')) {
+      if (statistics.includes('avg')) {
+        statistics = statistics.filter(x => x !== 'count')
+      } else {
+        statistics.push('avg')
+      }
+    }
     timestamp = +new Date(timestamp) || Date.now()
-    function recordStats (key) {
+    function recordStats(key) {
       statistics && statistics.forEach(function (stat) {
         if (stat === 'sum') {
           multi.hincrbyfloat(key, 'sum', num) // NOTICE: 必须是整数
@@ -132,8 +139,6 @@ exports = module.exports = function rts (options) {
         }
       })
     }
-    if (!statistics) statistics = ['sum']
-    if (num == undefined) num = 1
 
     let multi = redis.multi()
     granularities.forEach(function (gran) {
@@ -158,7 +163,7 @@ exports = module.exports = function rts (options) {
      * record unique access, like unique user of a period time.
      * @param {string | Array} uniqueId one or some uniqueId to be stats
      */
-  function recordUnique (name, uniqueId, statistics, aggregations, timestamp, callback) {
+  function recordUnique(name, uniqueId, statistics, aggregations, timestamp, callback) {
     timestamp = timestamp || Date.now()
     // normal record
     if (statistics) {
@@ -189,7 +194,7 @@ exports = module.exports = function rts (options) {
      *
      * @param {String} type sum, min, max, avg, count, uni
      */
-  async function getStatAsync (type, name, granCode, fromDate, toDate, callback) {
+  async function getStatAsync(type, name, granCode, fromDate, toDate, callback) {
     if (!granCode) throw new Error('granCode is required')
     if (!callback && typeof toDate === 'function') {
       callback = toDate
@@ -232,7 +237,7 @@ exports = module.exports = function rts (options) {
      *
      * @param {String} type sum, min, max, avg, count, uni
      */
-  function getStat (type, name, granCode, fromDate, toDate, callback) {
+  function getStat(type, name, granCode, fromDate, toDate, callback) {
     if (!granCode) throw new Error('granCode is required')
     if (!callback && typeof toDate === 'function') {
       callback = toDate
@@ -272,7 +277,7 @@ exports = module.exports = function rts (options) {
     })
   }
 
-  function aggrstat (type, name, aggr, date, callback) {
+  function aggrstat(type, name, aggr, date, callback) {
     if (!callback && typeof date === 'function') {
       callback = date
       date = Date.now()
@@ -292,7 +297,7 @@ exports = module.exports = function rts (options) {
     })
   }
 
-  function updateHyperLogLog () {
+  function updateHyperLogLog() {
     redis.hgetall(keyPFKeys, function (err, result) {
       if (err) return log(err)
       let now = Date.now()
@@ -313,7 +318,7 @@ exports = module.exports = function rts (options) {
 
   let updateTimer = setInterval(updateHyperLogLog, interval)
 
-  function stop () {
+  function stop() {
     clearInterval(updateTimer)
   }
 

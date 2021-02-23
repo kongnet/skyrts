@@ -4,7 +4,7 @@ let fs = require('fs')
 let scripts = {}
 let scriptSha1s = {}
 let redis = null
-let redisAsync = null
+let redisSync = null
 let defaultFileArr = ['avg', 'max', 'min', 'update_pf']
 defaultFileArr.forEach(function (key) {
   scripts[key] = fs.readFileSync(__dirname + '/lua/' + key + '.lua', 'utf-8')
@@ -23,7 +23,7 @@ function loadScripts (client) {
 
 async function loadDefaultScripts () {
   // 兼容老的
-  const multi = redisAsync.multi()
+  const multi = redisSync.multi()
   for (let key in scripts) {
     await multi.script('load', scripts[key])
   }
@@ -41,7 +41,7 @@ async function loadOneScript (key, filePath) {
       return -1
     }
     scripts[key] = fs.readFileSync(filePath, 'utf-8')
-    let multi = await redisAsync.multi()
+    let multi = await redisSync.multi()
     await multi.script('load', scripts[key])
     let results = await multi.exec()
     if (results[0][1]) scriptSha1s[key] = results[0][1]
@@ -119,7 +119,7 @@ function log (err, results) {
  */
 exports = module.exports = async function rts (options) {
   redis = options.redis
-  redisAsync = options.redisAsync
+  redisSync = options.redisSync
 
   let granularities = options.gran || '5m, 1h, 1d, 1w'
 
@@ -130,7 +130,7 @@ exports = module.exports = async function rts (options) {
   let interval = options.interval || 60000
 
   //loadScripts(redis)
-  await loadDefaultScripts(redisAsync)
+  await loadDefaultScripts(redisSync)
   prefix = '_rts_' + prefix
 
   let keyPFKeys = prefix + ':pfkeys'
@@ -293,7 +293,7 @@ exports = module.exports = async function rts (options) {
     toDate = toDate || Date.now()
     fromDate = fromDate || toDate - util.getTimePeriod(gran, points)
     let unitPeriod = gran[0]
-    let multi = await redisAsync.multi()
+    let multi = await redisSync.multi()
     if (!multi) throw new Error('redis multi error')
     let _points = []
     for (let d = fromDate; d <= toDate; d += unitPeriod) {

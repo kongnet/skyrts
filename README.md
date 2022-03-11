@@ -4,7 +4,9 @@
 
 - 按秒，分钟，小时，天，周，月，年统计
 - 按每（分钟、小时等）每小时，天，周，月，年聚合
-
+- 自由设置时间盒子
+- 基础聚合值 Min, Max, Avg, Sum, Range（Max-Min）,Count ,First(首次进入值) ,Last(最后进入值)
+- 高级聚合值 M2(二阶中心矩), Var.P（M2/Count）,Var.S（M2/(Count-1)), STD.P(Sqrt(Var.P)), STD.S(Sqrt(Var.S))
 ```javascript
 const rts = require('skyrts')
 const Pack = require('./package.json')

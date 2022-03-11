@@ -2,7 +2,7 @@
 
 ## redis 实时统计系统
 
-- 按分钟，小时，天，周，月，年统计
+- 按秒，分钟，小时，天，周，月，年统计
 - 按每（分钟、小时等）每小时，天，周，月，年聚合
 
 ```javascript
@@ -12,7 +12,7 @@ const Pack = require('./package.json')
 rts({
   redis: redis, // 异步redis引用
   redisAsync: redis, // 同步redis引用
-  gran: '5m, 1h, 1d, 1w, 1M, 1y', // 维度的梯度
+  gran: '1s, 5m, 1h, 1d, 1w, 1M, 1y', // 维度的梯度
   points: 1000, // 多少点循环记录，默认500个点
   prefix: Pack.name // 需要一个前缀，区分多项目
 })
@@ -32,6 +32,7 @@ rts.record(name, num = 1, statistics = ['sum', 'avg'], aggregations, timestamp, 
 - name 准备存放的字符串，最终形式是 '_rts_'+options.prefix + name
 - num 默认 1 sum+=1 否则 sum+=num
 - statistics 默认统计 count 计数，sum 总和，avg 平均值
+- 启用avg后，同时计算，m2 二阶中心矩，first 首次进入值，last 最后进入值
 - aggregations {Array} dy (day in week each year), hm(hour of day each month) null 就不处理聚合
 - timestamp 可以补历史记录，默认是当前服务器时间长整型
 - callback 一般不用

@@ -1,4 +1,4 @@
-## 0.1.5 (2022-03-11)
+## [0.1.6](https://github.com/kongnet/skyrts/compare/5608f67873f197f416e28b27b87001a7cf16c6de...v0.1.6) (2022-03-11)
 
 
 ### :art:
@@ -16,6 +16,7 @@
 ### :sparkles:
 
 * 增加加载额外hash函数loadOneScript ([1d03eb2](https://github.com/kongnet/skyrts/commit/1d03eb2e5c1573da69c8c5bc30b50114f47432f2))
+* avg.lua增加first last 和 m2二阶中间矩 ([77bed00](https://github.com/kongnet/skyrts/commit/77bed007deebc90a53549f868e29ef0cac5a91b3))
 
 
 

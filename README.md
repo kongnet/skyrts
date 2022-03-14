@@ -65,7 +65,7 @@ await rts.getStatAsync(type, name, granCode, fromDate, toDate)
 
 - type sum, min, max, avg, count, uni 唯一值情况
 - name key 的名称
-- granCode 开始 rts 设置的 gran: '5m, 1h, 1d, 1w, 1M, 1y'
+- granCode 开始 rts 设置的 gran: '1s, 5m, 1h, 1d, 1w, 1M, 1y'
 - fromDate 开始时间 Date 类型
 - toDate 结束时间 Date 类型
 - 可以使用 meeko 中的 data.offset()

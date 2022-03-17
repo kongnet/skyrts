@@ -1,6 +1,6 @@
 {
   "name": "skyrts",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "redis统计系统",
   "main": "index.js",
   "scripts": {

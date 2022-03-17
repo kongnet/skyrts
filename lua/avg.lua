@@ -1,4 +1,4 @@
-local key, num = KEYS[1], ARGV[1]
+local key, num = KEYS[1], KEYS[2]
 local data = redis.call('hmget', key, 'avg', 'm2', 'count') -- 取上次平均值
 local avg = data[1]
 local m2 = data[2]

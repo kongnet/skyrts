@@ -7,6 +7,7 @@
 - 自由设置时间盒子
 - 基础聚合值 Min, Max, Avg, Sum, Range（Max-Min）,Count ,First(首次进入值) ,Last(最后进入值)
 - 高级聚合值 M2(二阶中心矩), Var.P（M2/Count）,Var.S（M2/(Count-1)), STD.P(Sqrt(Var.P)), STD.S(Sqrt(Var.S))
+
 ```javascript
 const rts = require('skyrts')
 const Pack = require('./package.json')
@@ -34,7 +35,7 @@ rts.record(name, num = 1, statistics = ['sum', 'avg'], aggregations, timestamp, 
 - name 准备存放的字符串，最终形式是 '_rts_'+options.prefix + name
 - num 默认 1 sum+=1 否则 sum+=num
 - statistics 默认统计 count 计数，sum 总和，avg 平均值
-- 启用avg后，同时计算，m2 二阶中心矩，first 首次进入值，last 最后进入值
+- 启用 avg 后，同时计算，m2 二阶中心矩，first 首次进入值，last 最后进入值
 - aggregations {Array} dy (day in week each year), hm(hour of day each month) null 就不处理聚合
 - timestamp 可以补历史记录，默认是当前服务器时间长整型
 - callback 一般不用
@@ -85,3 +86,7 @@ const offset = function (interval, number) {
    */
 }
 ```
+
+### 实战例子
+
+![demo1](https://github.com/kongnet/skybase/raw/master/screenShot/demo1.png)
